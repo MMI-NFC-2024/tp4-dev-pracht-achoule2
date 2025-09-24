@@ -9,20 +9,66 @@ import "../styles/global.css";
   </head>
   <body>
     <header>
-      <nav>
+      <nav class="menu">
         <ul>
           <li><a href="/">Accueil</a></li>
-          <li><a href="/simple">Simple</a></li>
-          <li><a href="/penguin">Penguin</a></li>
-          <li><a href="/penguin-filter">Filtre</a></li>
-          <li><a href="/penguin-multi-filter">Multi-filtres</a></li>
+          <li><a href="/simple">Graphique simple</a></li>
+
+          <li><a href="/penguin">Penguins</a></li>
+          <li><a href="/penguin-filter">Filtre Penguins</a></li>
+          <li><a href="/penguin-multi-filter">Multi-filtres Penguins</a></li>
+
+          <li><a href="/aircrafts">Avions</a></li>
+          <li><a href="/aircrafts-filter">Filtres Avions</a></li>
+
+          <li><a href="/diamonds-filter">Filtres Diamants</a></li>
         </ul>
       </nav>
     </header>
+
     <main>
       <slot />
     </main>
   </body>
 </html>
 
+<style>
+  .menu {
+    background: #2c3e50;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
 
+  .menu ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .menu li {
+    margin: 0;
+  }
+
+  .menu a {
+    color: #ecf0f1;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+  }
+
+  .menu a:hover {
+    background: #1abc9c;
+    color: #fff;
+  }
+
+  @media (max-width: 700px) {
+    .menu ul {
+      flex-direction: column;
+    }
+  }
+</style>
