@@ -1,0 +1,112 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+---
+
+<Layout>
+  <main>
+    <h2>Filtres – Diamants</h2>
+    
+
+    <div>
+      <label for="color">Couleur :</label>
+      <select id="color">
+        <option value="">Toutes</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+        <option value="F">F</option>
+        <option value="G">G</option>
+        <option value="H">H</option>
+        <option value="I">I</option>
+        <option value="J">J</option>
+      </select>
+
+      <label for="clarity">Pureté :</label>
+      <select id="clarity">
+        <option value="">Toutes</option>
+        <option value="IF">IF</option>
+        <option value="VVS1">VVS1</option>
+        <option value="VVS2">VVS2</option>
+        <option value="VS1">VS1</option>
+        <option value="VS2">VS2</option>
+        <option value="SI1">SI1</option>
+        <option value="SI2">SI2</option>
+      </select>
+
+      <label for="minCarat">Carat minimum :</label>
+      <input type="number" id="minCarat" value="0.2" step="0.1" min="0" />
+
+      <label for="minPrice">Prix minimum (€) :</label>
+      <input type="number" id="minPrice" value="500" step="100" min="0" />
+    </div>
+
+    <div id="plot"></div>
+  </main>
+
+  <script>
+    import * as Plot from "@observablehq/plot";
+    import diamonds from "../assets/diamonds.json";
+
+    const selectColor = document.getElementById("color");
+    const selectClarity = document.getElementById("clarity");
+    const inputMinCarat = document.getElementById("minCarat");
+    const inputMinPrice = document.getElementById("minPrice");
+    const plotDiv = document.getElementById("plot");
+
+    function renderPlot() {
+      let filtered = diamonds;
+
+      const color = selectColor.value;
+      const clarity = selectClarity.value;
+      const minCarat = parseFloat(inputMinCarat.value);
+      const minPrice = parseFloat(inputMinPrice.value);
+
+      if (color) {
+        filtered = filtered.filter(d => d.color === color);
+      }
+      if (clarity) {
+        filtered = filtered.filter(d => d.clarity === clarity);
+      }
+      if (!isNaN(minCarat)) {
+        filtered = filtered.filter(d => d.carat >= minCarat);
+      }
+      if (!isNaN(minPrice)) {
+        filtered = filtered.filter(d => d.price >= minPrice);
+      }
+
+      plotDiv.innerHTML = "";
+
+      if (filtered.length === 0) {
+        plotDiv.innerHTML = "<p>Aucun diamant ne correspond à ces critères.</p>";
+        return;
+      }
+
+      const plot = Plot.plot({
+        marks: [
+          Plot.dot(filtered, {
+            x: "carat",
+            y: "price",
+            stroke: "color",
+            fill: "clarity",
+            r: 4,
+            tooltip: d => `💎 ${d.carat} ct – ${d.color}/${d.clarity}\n💰 ${d.price} €`
+          })
+        ],
+        x: { label: "Carat" },
+        y: { label: "Prix (€)" },
+        width: 700,
+        height: 400,
+        marginLeft: 60,
+        marginBottom: 50
+      });
+
+      plotDiv.appendChild(plot);
+    }
+
+    selectColor.addEventListener("change", renderPlot);
+    selectClarity.addEventListener("change", renderPlot);
+    inputMinCarat.addEventListener("input", renderPlot);
+    inputMinPrice.addEventListener("input", renderPlot);
+    renderPlot();
+  </script>
+</Layout>
