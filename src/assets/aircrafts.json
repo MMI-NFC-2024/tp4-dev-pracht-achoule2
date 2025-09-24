@@ -1,0 +1,37 @@
+[
+  {
+    "model": "Airbus A380",
+    "type": "Civil",
+    "max_speed_kmh": 1020,
+    "range_km": 15200,
+    "capacity": 853
+  },
+  {
+    "model": "Boeing 747",
+    "type": "Civil",
+    "max_speed_kmh": 988,
+    "range_km": 13800,
+    "capacity": 660
+  },
+  {
+    "model": "F-22 Raptor",
+    "type": "Militaire",
+    "max_speed_kmh": 2410,
+    "range_km": 2960,
+    "capacity": 1
+  },
+  {
+    "model": "Dassault Rafale",
+    "type": "Militaire",
+    "max_speed_kmh": 1912,
+    "range_km": 3700,
+    "capacity": 1
+  },
+  {
+    "model": "Concorde",
+    "type": "Civil",
+    "max_speed_kmh": 2179,
+    "range_km": 7222,
+    "capacity": 128
+  }
+]
