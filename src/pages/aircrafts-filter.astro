@@ -1,0 +1,89 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+---
+
+<Layout>
+  <main>
+    <h2>Filtres – Performances des avions</h2>
+    
+
+    <div>
+      <label for="type">Type :</label>
+      <select id="type">
+        <option value="">Tous</option>
+        <option value="Civil">Civil</option>
+        <option value="Militaire">Militaire</option>
+      </select>
+
+      <label for="minSpeed">Vitesse minimale (km/h) :</label>
+      <input type="number" id="minSpeed" value="0" min="0" step="100" />
+
+      <label for="minCapacity">Capacité minimale :</label>
+      <input type="number" id="minCapacity" value="0" min="0" step="10" />
+    </div>
+
+    <div id="plot"></div>
+  </main>
+
+  <script>
+    import * as Plot from "@observablehq/plot";
+    import aircrafts from "../assets/aircrafts.json";
+
+    const selectType = document.getElementById("type");
+    const inputMinSpeed = document.getElementById("minSpeed");
+    const inputMinCapacity = document.getElementById("minCapacity");
+    const plotDiv = document.getElementById("plot");
+
+    function renderPlot() {
+      let filtered = aircrafts;
+
+      const type = selectType.value;
+      const minSpeed = parseInt(inputMinSpeed.value);
+      const minCapacity = parseInt(inputMinCapacity.value);
+
+      if (type) {
+        filtered = filtered.filter(a => a.type === type);
+      }
+      if (!isNaN(minSpeed)) {
+        filtered = filtered.filter(a => a.max_speed_kmh >= minSpeed);
+      }
+      if (!isNaN(minCapacity)) {
+        filtered = filtered.filter(a => a.capacity >= minCapacity);
+      }
+
+      plotDiv.innerHTML = "";
+
+      if (filtered.length === 0) {
+        plotDiv.innerHTML = "<p>Aucun avion ne correspond à ces critères.</p>";
+        return;
+      }
+
+      const plot = Plot.plot({
+        marks: [
+          Plot.dot(filtered, {
+            x: "range_km",
+            y: "max_speed_kmh",
+            stroke: "type",
+            fill: "type",
+            r: d => Math.sqrt(d.capacity) * 0.8,
+            tooltip: d => `${d.model} – ${d.type}\nVitesse: ${d.max_speed_kmh} km/h\nAutonomie: ${d.range_km} km\nCapacité: ${d.capacity}`
+          })
+        ],
+        x: { label: "Autonomie (km)" },
+        y: { label: "Vitesse maximale (km/h)" },
+        width: 700,
+        height: 400,
+        marginLeft: 60,
+        marginBottom: 50
+      });
+
+      plotDiv.appendChild(plot);
+    }
+
+    selectType.addEventListener("change", renderPlot);
+    inputMinSpeed.addEventListener("input", renderPlot);
+    inputMinCapacity.addEventListener("input", renderPlot);
+    renderPlot();
+  </script>
+</Layout>
